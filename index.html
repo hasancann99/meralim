@@ -3,87 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seni Seviyorum</title>
+    <title>Sonsuz Aşkım</title>
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #1a1a1a;
-            overflow: hidden;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        .background-image { 
+            position: fixed; width: 100%; height: 100%; z-index: -1;
+            background-image: url('https://media.discordapp.net/attachments/1502007535253852190/1503017045556727888/Snapchat-1926851705.jpg?ex=6a01d134&is=6a007fb4&hm=d7e70c979ea060b1625ff6a9be2543b0544dbb9c0e740cadbd0798df8391b60c&=&format=webp&width=540&height=960');
+            background-size: cover; background-position: center; opacity: 0.5;
         }
 
-        .container {
-            text-align: center;
-            z-index: 1;
+        .overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
         }
 
-        h1 {
-            color: #ff4d6d;
-            font-size: 3rem;
-            text-shadow: 0 0 20px rgba(255, 77, 109, 0.5);
-            animation: pulse 2s infinite;
+        h1 { color: #ff4d6d; font-size: 2.5rem; text-shadow: 0 0 20px #ff4d6d; margin-bottom: 10px; z-index: 10; padding: 0 20px; font-weight: bold; }
+        
+        .message-box {
+            background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px);
+            padding: 25px; border-radius: 20px; border: 1px solid rgba(255, 77, 109, 0.5);
+            color: white; max-width: 80%; margin-top: 20px; z-index: 10; box-shadow: 0 0 30px rgba(0,0,0,0.5);
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+        .music-control {
+            position: fixed; top: 20px; right: 20px; z-index: 100;
+            background: #ff4d6d; color: white; border: none; padding: 15px 25px;
+            border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 1rem;
+            box-shadow: 0 0 20px rgba(255, 77, 109, 0.6);
         }
 
-        .heart {
-            position: absolute;
-            color: #ff4d6d;
-            font-size: 20px;
-            user-select: none;
-            pointer-events: none;
-            animation: move linear infinite;
-        }
-
-        @keyframes move {
-            0% {
-                transform: translateY(100vh) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-10vh) rotate(360deg);
-                opacity: 0;
-            }
+        .heart { position: absolute; color: #ff4d6d; animation: float linear infinite; z-index: 5; pointer-events: none; }
+        @keyframes float { 
+            0% { transform: translateY(110vh) scale(0); opacity: 1; } 
+            100% { transform: translateY(-10vh) scale(1.5); opacity: 0; } 
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
+    <div class="background-image"></div>
+    <button class="music-control" id="playBtn" onclick="playMusic()">❤️ Müziğimizi Başlat ❤️</button>
+    <div id="player"></div>
+
+    <div class="overlay">
         <h1>Seni Çok Seviyorum Kadınım</h1>
+        <div class="message-box">
+            <p style="font-size: 1.1rem; margin-bottom: 15px; color: #ffb7c5;"><strong>"Söyleyin o benim gökyüzüm güneşim..."</strong></p>
+            <p>Sen hayatıma giren en güzel şeysin Meralim. Her anımda, her gülüşümde sen varsın. İyi ki benimsin, iyi ki varsın.</p>
+        </div>
     </div>
 
+    <script src="https://www.youtube.com/iframe_api"></script>
     <script>
-        function createHeart() {
+        var player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '0', width: '0',
+                videoId: 'BUGxpRiskt4', 
+                playerVars: { 'autoplay': 0, 'controls': 0, 'modestbranding': 1 },
+                events: { 'onReady': onPlayerReady }
+            });
+        }
+        function onPlayerReady(event) { event.target.setVolume(100); }
+        function playMusic() { 
+            if(player && player.playVideo) {
+                player.playVideo(); 
+                document.getElementById('playBtn').style.display = 'none'; 
+            }
+        }
+
+        setInterval(() => {
             const heart = document.createElement('div');
             heart.classList.add('heart');
             heart.innerHTML = '❤️';
-            
-            // Rastgele pozisyon ve hız
             heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.animationDuration = Math.random() * 3 + 2 + 's';
-            heart.style.opacity = Math.random();
-            heart.style.fontSize = Math.random() * 20 + 10 + 'px';
-
+            heart.style.animationDuration = Math.random() * 3 + 4 + 's';
+            heart.style.fontSize = Math.random() * 20 + 15 + 'px';
             document.body.appendChild(heart);
-
-            // Ekran dışına çıkınca sil
-            setTimeout(() => {
-                heart.remove();
-            }, 5000);
-        }
-
-        // Sürekli kalp oluştur
-        setInterval(createHeart, 300);
+            setTimeout(() => heart.remove(), 6000);
+        }, 300);
     </script>
 </body>
 </html>
